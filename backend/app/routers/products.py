@@ -9,7 +9,7 @@ from app.utils.filters import ProductFilter
 from app.dependencies import get_admin_user
 from app.models.user import User
 
-router = APIRouter(prefix="/products", tags=["Products"])
+router = APIRouter(tags=["Products"])
 
 @router.get("", response_model=PaginatedResponse[ProductResponse])
 def get_products(

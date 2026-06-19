@@ -8,7 +8,7 @@ from app.models.review import Review
 from app.schemas.review_schema import ReviewCreate, ReviewResponse
 from app.dependencies import get_current_user
 
-router = APIRouter(prefix="/reviews", tags=["Reviews"])
+router = APIRouter(tags=["Reviews"])
 
 @router.get("/{product_id}", response_model=List[ReviewResponse])
 def get_product_reviews(product_id: int, db: Session = Depends(get_db)):

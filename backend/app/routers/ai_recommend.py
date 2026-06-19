@@ -6,7 +6,7 @@ from app.database import get_db
 from app.schemas.product_schema import ProductResponse
 from app.services.ai_service import AIService
 
-router = APIRouter(prefix="/ai", tags=["AI Recommendation"])
+router = APIRouter(tags=["AI"])
 
 class RecommendationQuizRequest(BaseModel):
     gender: str # e.g. "Men", "Women", "Unisex"

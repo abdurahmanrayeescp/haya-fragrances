@@ -6,7 +6,7 @@ from app.schemas.user_schema import UserUpdate, UserResponse
 from app.dependencies import get_current_user
 from app.security import get_password_hash
 
-router = APIRouter(prefix="/users", tags=["Users"])
+router = APIRouter(tags=["Users"])
 
 @router.put("/profile", response_model=UserResponse)
 def update_profile(

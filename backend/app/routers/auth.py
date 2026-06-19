@@ -8,7 +8,7 @@ from app.security import get_password_hash, verify_password, create_access_token
 from app.dependencies import get_current_user
 from app.services.email_service import EmailService
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(tags=["Auth"])
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def register(payload: RegisterRequest, db: Session = Depends(get_db)):

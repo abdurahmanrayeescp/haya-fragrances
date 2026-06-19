@@ -11,7 +11,7 @@ from app.schemas.order_schema import OrderCreate, OrderResponse, OrderStatusUpda
 from app.dependencies import get_current_user, get_admin_user
 from app.services.email_service import EmailService
 
-router = APIRouter(prefix="/orders", tags=["Orders"])
+router = APIRouter(tags=["Orders"])
 
 @router.post("", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
 def place_order(

@@ -11,7 +11,7 @@ from app.models.coupon import Coupon
 from app.schemas.coupon_schema import CouponCreate, CouponResponse
 from app.dependencies import get_admin_user
 
-router = APIRouter(prefix="/admin", tags=["Admin Dashboard"])
+router = APIRouter(tags=["Admin"])
 
 @router.get("/stats")
 def get_dashboard_stats(
