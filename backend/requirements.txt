@@ -12,8 +12,14 @@ psycopg2-binary>=2.9.9           # PostgreSQL adapter (binary build = no compila
 python-dotenv>=1.0.1             # .env file loading for local development
 
 # --- Auth / Security ---
-python-jose[cryptography]>=3.3.0 # JWT encode/decode (replaces pyjwt)
-passlib[bcrypt]>=1.7.4           # Password hashing with bcrypt
+python-jose[cryptography]>=3.3.0 # JWT encode/decode
+# IMPORTANT: bcrypt must be pinned to 4.0.1.
+# bcrypt 4.1+ removed the __about__ attribute which breaks passlib's version
+# detection (AttributeError: module 'bcrypt' has no attribute '__about__').
+# bcrypt 4.0.1 is the last stable release that works correctly with both
+# direct usage (security.py) and passlib's compatibility shim.
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
 
 # --- Request Parsing ---
 python-multipart>=0.0.9          # Required for form data / OAuth2 password flow
