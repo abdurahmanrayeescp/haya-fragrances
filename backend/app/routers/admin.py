@@ -9,9 +9,56 @@ from app.models.product import Product
 from app.models.order import Order
 from app.models.coupon import Coupon
 from app.schemas.coupon_schema import CouponCreate, CouponResponse
+from app.schemas.auth_schema import LoginRequest, TokenResponse
+from app.schemas.user_schema import UserResponse
+from app.security import verify_password, create_access_token
 from app.dependencies import get_admin_user
 
 router = APIRouter(tags=["Admin"])
+
+
+# ---------------------------------------------------------------------------
+# Admin-specific authentication
+# ---------------------------------------------------------------------------
+
+@router.post("/login", response_model=TokenResponse)
+def admin_login(payload: LoginRequest, db: Session = Depends(get_db)):
+    """
+    Dedicated admin login. Verifies credentials AND that the account has
+    role == 'admin' before issuing a JWT token.
+    Returns HTTP 403 if the user exists but is not an admin.
+    """
+    user = db.query(User).filter(User.email == payload.email).first()
+    if not user or not verify_password(payload.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password",
+        )
+    if user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access restricted to administrator accounts",
+        )
+    token = create_access_token(data={"sub": user.email})
+    return {"access_token": token, "token_type": "bearer", "user": user}
+
+
+# ---------------------------------------------------------------------------
+# Admin user management
+# ---------------------------------------------------------------------------
+
+@router.get("/users", response_model=List[UserResponse])
+def get_all_users(
+    admin: User = Depends(get_admin_user),
+    db: Session = Depends(get_db),
+):
+    """Returns all registered users ordered by creation date (newest first)."""
+    return db.query(User).order_by(User.created_at.desc()).all()
+
+
+# ---------------------------------------------------------------------------
+# Dashboard stats
+# ---------------------------------------------------------------------------
 
 @router.get("/stats")
 def get_dashboard_stats(

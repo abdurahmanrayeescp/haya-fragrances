@@ -174,6 +174,19 @@ def _seed_database():
             db.commit()
             logger.info("Default users seeded.")
 
+        # ---- Haya Admin account (idempotent – only inserted if missing) ----
+        if not db.query(User).filter(User.email == "admin@haya.com").first():
+            logger.info("Seeding Haya admin account…")
+            haya_admin = User(
+                name="Haya Admin",
+                email="admin@haya.com",
+                hashed_password=get_password_hash("Admin123"),
+                role="admin",
+            )
+            db.add(haya_admin)
+            db.commit()
+            logger.info("Haya admin (admin@haya.com) seeded successfully.")
+
         # ---- Products ----
         if db.query(Product).count() == 0:
             logger.info("Seeding default products…")
