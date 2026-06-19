@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from datetime import datetime, timezone
@@ -13,8 +13,81 @@ from app.schemas.auth_schema import LoginRequest, TokenResponse
 from app.schemas.user_schema import UserResponse
 from app.security import verify_password, create_access_token
 from app.dependencies import get_admin_user
+from app.config import settings
 
 router = APIRouter(tags=["Admin"])
+
+
+# ---------------------------------------------------------------------------
+# Image upload  (Cloudinary)
+# ---------------------------------------------------------------------------
+
+ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"}
+MAX_IMAGE_BYTES = 5 * 1024 * 1024  # 5 MB
+
+
+@router.post("/upload-image")
+async def upload_product_image(
+    file: UploadFile = File(...),
+    admin: User = Depends(get_admin_user),
+):
+    """
+    Accepts a multipart image file, uploads it to Cloudinary, and returns
+    the public CDN URL.  Requires three Railway environment variables:
+      CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_SECRET
+    """
+    # Validate file type
+    if file.content_type not in ALLOWED_IMAGE_TYPES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported file type '{file.content_type}'. Allowed: JPEG, PNG, WebP, GIF, AVIF.",
+        )
+
+    # Read file contents and enforce size limit
+    contents = await file.read()
+    if len(contents) > MAX_IMAGE_BYTES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="File is too large. Maximum allowed size is 5 MB.",
+        )
+
+    # Check Cloudinary is configured
+    if not settings.CLOUDINARY_CLOUD_NAME or settings.CLOUDINARY_API_KEY == "cloud_mock_key":
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=(
+                "Image hosting is not configured. "
+                "Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_SECRET "
+                "to your Railway environment variables, then redeploy."
+            ),
+        )
+
+    # Upload to Cloudinary
+    try:
+        import cloudinary
+        import cloudinary.uploader
+
+        cloudinary.config(
+            cloud_name=settings.CLOUDINARY_CLOUD_NAME,
+            api_key=settings.CLOUDINARY_API_KEY,
+            api_secret=settings.CLOUDINARY_SECRET,
+            secure=True,
+        )
+
+        result = cloudinary.uploader.upload(
+            contents,
+            folder="haya-fragrances/products",
+            resource_type="image",
+            # Automatically resize very large images to stay under CDN limits
+            transformation=[{"quality": "auto", "fetch_format": "auto"}],
+        )
+        return {"url": result["secure_url"]}
+
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Image upload failed: {str(exc)}",
+        )
 
 
 # ---------------------------------------------------------------------------

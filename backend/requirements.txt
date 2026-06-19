@@ -21,6 +21,9 @@ python-jose[cryptography]>=3.3.0 # JWT encode/decode
 passlib[bcrypt]==1.7.4
 bcrypt==4.0.1
 
+# --- Image Hosting ---
+cloudinary>=1.36.0             # Cloudinary SDK for product image uploads
+
 # --- Request Parsing ---
 python-multipart>=0.0.9          # Required for form data / OAuth2 password flow
 

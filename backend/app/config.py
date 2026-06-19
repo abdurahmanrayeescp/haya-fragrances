@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     RESEND_API_KEY: str = "re_mock_key"
     RAZORPAY_KEY_ID: str = "rzp_test_mock"
     RAZORPAY_SECRET: str = "rzp_secret_mock"
+    CLOUDINARY_CLOUD_NAME: str = ""          # Set in Railway env vars
     CLOUDINARY_API_KEY: str = "cloud_mock_key"
     CLOUDINARY_SECRET: str = "cloud_mock_secret"
 
