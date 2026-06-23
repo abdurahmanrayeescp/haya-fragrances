@@ -63,3 +63,71 @@ def post_memory_finder(
     """
     result = AIService.get_memory_recommendations(db=db, memory=payload.memory)
     return result
+
+class VoiceAnalysisRequest(BaseModel):
+    transcript: str
+
+class VoiceAnalysisResponse(BaseModel):
+    transcript: str
+    moods: List[str]
+    energy: str
+    confidence_score: int
+    occasion: str
+    notes: List[str]
+    description: str
+    recommendations: List[MemoryRecommendation]
+
+@router.post("/voice-analysis", response_model=VoiceAnalysisResponse)
+def post_voice_analysis(
+    payload: VoiceAnalysisRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    POST endpoint to analyze natural language voice transcripts and recommend matched products.
+    """
+    result = AIService.analyze_voice_transcript(db=db, transcript=payload.transcript)
+    return result
+
+class PerfumeCreatorRequest(BaseModel):
+    description: str
+
+class PerfumeCreatorResponse(BaseModel):
+    perfume_name: str
+    story: str
+    slogan: str
+    top_notes: List[str]
+    middle_notes: List[str]
+    base_notes: List[str]
+    bottle_style: str
+    bottle_color: str
+    packaging_style: str
+    target_audience: str
+    luxury_score: int
+    image_prompt: str
+
+class GenerateBottleRequest(BaseModel):
+    image_prompt: str
+
+class GenerateBottleResponse(BaseModel):
+    image_url: str
+
+@router.post("/perfume-creator", response_model=PerfumeCreatorResponse)
+def post_perfume_creator(
+    payload: PerfumeCreatorRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    POST endpoint to create an entirely new, custom perfume concept based on inspiration text.
+    """
+    result = AIService.create_perfume_concept(db=db, description=payload.description)
+    return result
+
+@router.post("/generate-bottle", response_model=GenerateBottleResponse)
+def post_generate_bottle(
+    payload: GenerateBottleRequest
+):
+    """
+    POST endpoint to generate a custom bottle design image from an image generation prompt.
+    """
+    result = AIService.generate_bottle_image(image_prompt=payload.image_prompt)
+    return result

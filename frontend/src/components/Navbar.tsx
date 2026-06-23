@@ -27,16 +27,22 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8 text-xs font-medium tracking-widest text-[#AEAEB2]">
+          <nav className="hidden md:flex items-center space-x-6 text-[10px] font-medium tracking-widest text-[#AEAEB2]">
             <Link href="/products" className="hover:text-white transition">
               COLLECTION
+            </Link>
+            <Link href="/ai-perfume-creator" className="hover:text-[#D4AF37] transition">
+              AI PERFUME CREATOR
             </Link>
             <Link href="/ai-recommend" className="hover:text-white transition">
               SCENT QUIZ
             </Link>
-            <Link href="/ai-memory-finder" className="flex items-center space-x-1.5 hover:text-[#D4AF37] text-white font-semibold transition">
-              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>AI FRAGRANCE FINDER</span>
+            <Link href="/ai-memory-finder" className="hover:text-white transition">
+              MEMORY FINDER
+            </Link>
+            <Link href="/ai-voice-finder" className="flex items-center space-x-1 hover:text-[#D4AF37] text-white font-semibold transition">
+              <Sparkles className="w-3 h-3 text-[#D4AF37]" />
+              <span>VOICE PERFUME FINDER</span>
             </Link>
             {isAuthenticated && user?.role === 'admin' && (
               <Link href="/admin" className="flex items-center space-x-1 text-[#E5C158] hover:text-[#D4AF37] transition">
@@ -106,16 +112,22 @@ export function Navbar() {
 
         {/* Mobile menu overlay */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-black/95 backdrop-blur-lg border-b border-[#D4AF37]/10 px-6 py-8 flex flex-col space-y-6 text-center text-base tracking-widest font-medium text-[#AEAEB2]">
+          <div className="md:hidden bg-black/95 backdrop-blur-lg border-b border-[#D4AF37]/10 px-6 py-8 flex flex-col space-y-5 text-center text-sm tracking-widest font-medium text-[#AEAEB2]">
             <Link href="/products" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition">
               COLLECTION
+            </Link>
+            <Link href="/ai-perfume-creator" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#D4AF37] text-[#D4AF37] transition">
+              AI PERFUME CREATOR
             </Link>
             <Link href="/ai-recommend" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition">
               SCENT QUIZ
             </Link>
-            <Link href="/ai-memory-finder" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-center space-x-1.5 hover:text-[#D4AF37] text-[#D4AF37] transition">
+            <Link href="/ai-memory-finder" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition">
+              MEMORY FINDER
+            </Link>
+            <Link href="/ai-voice-finder" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-center space-x-1.5 hover:text-[#D4AF37] text-[#D4AF37] transition">
               <Sparkles className="w-4 h-4 text-[#D4AF37]" />
-              <span>AI FRAGRANCE FINDER</span>
+              <span>VOICE PERFUME FINDER</span>
             </Link>
             {isAuthenticated && user?.role === 'admin' && (
               <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="text-[#E5C158] hover:text-[#D4AF37] transition">
