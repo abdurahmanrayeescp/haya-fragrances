@@ -84,3 +84,58 @@ def test_memory_finder_fallback_beach(client, db_session):
     recs = data["recommendations"]
     # Acqua Di Gio should be the top match because of "marine notes" and "sea breezes" in description
     assert recs[0]["name"] == "Acqua Di Gio"
+
+def test_new_fragrances_matching(client, db_session):
+    # Seed our new products
+    p_oud = Product(
+        name="Midnight Oud", brand="Amouage", category="Luxury Collection",
+        description="An opulent, rich fragrance evoking the absolute luxury of Dubai. Saffron, leather, and precious oud wood.",
+        notes="Oud Wood, Saffron, Amber, Leather, Incense, Patchouli, Sandalwood", price=340.0, stock=10
+    )
+    p_amber = Product(
+        name="Royal Amber", brand="Xerjoff", category="Luxury Collection",
+        description="Reminiscent of walking on a beach at sunset, Royal Amber.",
+        notes="Amber, Vanilla, Bergamot, Orange Blossom, Labdanum, Patchouli", price=320.0, stock=12
+    )
+    p_musk = Product(
+        name="Velvet Musk", brand="Narciso Rodriguez", category="Women",
+        description="Elegant and timeless, evoking a romantic wedding day.",
+        notes="White Musk, Rose, Jasmine, Ylang-Ylang, Cedarwood, Amber", price=145.0, stock=15
+    )
+    p_cafe = Product(
+        name="Café Noir", brand="Maison Margiela", category="Unisex",
+        description="Cozy and rich, bringing to mind rainy evenings spent indoors with coffee.",
+        notes="Coffee, Vanilla, Tonka Bean, Cocoa, Sandalwood, Patchouli, Cedarwood", price=160.0, stock=18
+    )
+    p_serene = Product(
+        name="Dawn Serenity", brand="Haya Fragrances", category="Luxury Collection",
+        description="Inspired by the serene atmosphere of a peaceful mosque after Fajr prayer.",
+        notes="White Musk, Sandalwood, Amber, Rosewater, Oud Wood", price=180.0, stock=10
+    )
+    db_session.add_all([p_oud, p_amber, p_musk, p_cafe, p_serene])
+    db_session.commit()
+
+    # 1. Test Dubai hotel memory -> Midnight Oud
+    resp = client.post("/api/ai/memory-finder", json={"memory": "A luxury hotel lobby in Dubai"})
+    assert resp.status_code == 200
+    recs = resp.json()["recommendations"]
+    assert recs[0]["name"] == "Midnight Oud"
+
+    # 2. Test wedding day memory -> Velvet Musk
+    resp = client.post("/api/ai/memory-finder", json={"memory": "My beautiful wedding day celebration"})
+    assert resp.status_code == 200
+    recs = resp.json()["recommendations"]
+    assert recs[0]["name"] == "Velvet Musk"
+
+    # 3. Test rain & coffee memory -> Café Noir
+    resp = client.post("/api/ai/memory-finder", json={"memory": "Rainy evenings with a warm cup of coffee and books"})
+    assert resp.status_code == 200
+    recs = resp.json()["recommendations"]
+    assert recs[0]["name"] == "Café Noir"
+
+    # 4. Test Fajr mosque memory -> Dawn Serenity
+    resp = client.post("/api/ai/memory-finder", json={"memory": "A peaceful mosque after Fajr prayer"})
+    assert resp.status_code == 200
+    recs = resp.json()["recommendations"]
+    assert recs[0]["name"] == "Dawn Serenity"
+
