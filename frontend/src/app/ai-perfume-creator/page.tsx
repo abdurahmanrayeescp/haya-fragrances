@@ -32,6 +32,7 @@ export default function AIPerfumeCreatorPage() {
   const [generatingImage, setGeneratingImage] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [editablePrompt, setEditablePrompt] = useState('');
 
   // 5 loading stages sequence
   useEffect(() => {
@@ -53,6 +54,7 @@ export default function AIPerfumeCreatorPage() {
     setError(null);
     setResult(null);
     setGeneratedImageUrl(null);
+    setEditablePrompt('');
 
     try {
       const response = await api.post<PerfumeCreatorResponse>('/ai/perfume-creator', {
@@ -63,6 +65,7 @@ export default function AIPerfumeCreatorPage() {
       await new Promise((resolve) => setTimeout(resolve, 7500));
 
       setResult(response.data);
+      setEditablePrompt(response.data.image_prompt);
     } catch (err: any) {
       console.error(err);
       setError(err.message || 'Failed to formulate perfume concept. Please try again.');
@@ -72,12 +75,12 @@ export default function AIPerfumeCreatorPage() {
   };
 
   const handleGenerateBottleImage = async () => {
-    if (!result?.image_prompt) return;
+    if (!editablePrompt.trim()) return;
 
     setGeneratingImage(true);
     try {
       const response = await api.post<{ image_url: string }>('/ai/generate-bottle', {
-        image_prompt: result.image_prompt
+        image_prompt: editablePrompt.trim()
       });
       setGeneratedImageUrl(response.data.image_url);
     } catch (err) {
@@ -88,8 +91,8 @@ export default function AIPerfumeCreatorPage() {
   };
 
   const handleCopyPrompt = () => {
-    if (!result?.image_prompt) return;
-    navigator.clipboard.writeText(result.image_prompt);
+    if (!editablePrompt) return;
+    navigator.clipboard.writeText(editablePrompt);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -99,6 +102,7 @@ export default function AIPerfumeCreatorPage() {
     setResult(null);
     setError(null);
     setGeneratedImageUrl(null);
+    setEditablePrompt('');
   };
 
   const selectExample = (exampleText: string) => {
@@ -392,11 +396,14 @@ export default function AIPerfumeCreatorPage() {
 
                 {/* AI prompt copy box */}
                 <div className="glass-card p-6 rounded-2xl space-y-4 text-left">
-                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">AI Bottle Design Prompt</span>
+                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold font-semibold mb-1">AI Bottle Design Prompt</span>
                   
-                  <div className="bg-black/60 border border-[#1F1F23] rounded-lg p-3 text-[11px] text-[#AEAEB2] leading-relaxed max-h-[100px] overflow-y-auto font-mono select-all">
-                    {result.image_prompt}
-                  </div>
+                  <textarea
+                    value={editablePrompt}
+                    onChange={(e) => setEditablePrompt(e.target.value)}
+                    placeholder="Bottle design image prompt..."
+                    className="w-full min-h-[90px] bg-black/60 border border-[#1F1F23] hover:border-white/10 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] rounded-lg p-3 text-[11px] text-[#F5F5F7] leading-relaxed font-mono resize-y focus:outline-none"
+                  />
 
                   <button
                     onClick={handleCopyPrompt}
