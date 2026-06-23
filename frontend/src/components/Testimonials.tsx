@@ -1,8 +1,11 @@
 'use client';
 
 import { Star, Quote } from 'lucide-react';
+import { useTranslation } from '../store/useI18nStore';
 
 export function Testimonials() {
+  const { t } = useTranslation();
+
   const testimonials = [
     {
       name: 'Victoria Sterling',
@@ -28,8 +31,9 @@ export function Testimonials() {
     <div className="py-20 bg-[#0b0b0b] font-sans">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center max-w-xl mx-auto mb-16">
-          <span className="text-[10px] tracking-widest text-[#D4AF37] font-semibold uppercase">TESTIMONIALS</span>
-          <h2 className="serif-title text-3xl md:text-4xl font-bold text-white mt-2">What Our Connoisseurs Say</h2>
+          <span className="text-[10px] tracking-widest text-[#D4AF37] font-semibold uppercase">{t('products.reviews')}</span>
+          <h2 className="serif-title text-3xl md:text-4xl font-bold text-white mt-2">{t('home.testimonialsTitle')}</h2>
+          <p className="text-xs text-[#AEAEB2] mt-2 font-medium tracking-wide">{t('home.testimonialsSubtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

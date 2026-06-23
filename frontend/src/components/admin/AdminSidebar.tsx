@@ -2,6 +2,8 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useAdminStore } from '../../store/useAdminStore';
+import { useTranslation } from '../../store/useI18nStore';
+import { LanguageSwitcher } from '../LanguageSwitcher';
 import {
   LayoutDashboard,
   Package,
@@ -14,17 +16,18 @@ import {
 } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { label: 'Dashboard',  href: '/admin',          icon: LayoutDashboard },
-  { label: 'Products',   href: '/admin/products', icon: Package         },
-  { label: 'Orders',     href: '/admin/orders',   icon: ShoppingBag     },
-  { label: 'Users',      href: '/admin/users',    icon: Users           },
-  { label: 'Coupons',    href: '/admin/coupons',  icon: Tag             },
+  { key: 'dashboard',  href: '/admin',          icon: LayoutDashboard },
+  { key: 'products',   href: '/admin/products', icon: Package         },
+  { key: 'orders',     href: '/admin/orders',   icon: ShoppingBag     },
+  { key: 'users',      href: '/admin/users',    icon: Users           },
+  { key: 'coupons',    href: '/admin/coupons',  icon: Tag             },
 ];
 
 export default function AdminSidebar() {
   const router   = useRouter();
   const pathname = usePathname();
   const { adminLogout, adminUser } = useAdminStore();
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     adminLogout();
@@ -59,12 +62,12 @@ export default function AdminSidebar() {
           Navigation
         </p>
 
-        {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
+        {NAV_ITEMS.map(({ key, href, icon: Icon }) => {
           const active = isActive(href);
           return (
             <button
               key={href}
-              id={`admin-nav-${label.toLowerCase()}`}
+              id={`admin-nav-${key}`}
               onClick={() => router.push(href)}
               className={`w-full group flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium tracking-wide transition-all duration-200 ${
                 active
@@ -77,7 +80,7 @@ export default function AdminSidebar() {
                   active ? 'text-[#D4AF37]' : 'text-[#8E8E93] group-hover:text-white'
                 }`}
               />
-              <span className="flex-1 text-left">{label}</span>
+              <span className="flex-1 text-left">{t(`admin.${key}`)}</span>
               {active && (
                 <ChevronRight className="w-3 h-3 text-[#D4AF37] opacity-80" />
               )}
@@ -88,6 +91,9 @@ export default function AdminSidebar() {
 
       {/* ── Footer / Logout ──────────────────────────── */}
       <div className="px-3 py-4 border-t border-[#1F1F23] flex-shrink-0 space-y-2">
+        <div className="flex justify-center py-1">
+          <LanguageSwitcher />
+        </div>
         {adminUser?.email && (
           <div className="px-3 py-2 rounded-lg bg-[#1F1F23]/60">
             <p className="text-[9px] text-[#AEAEB2]/60 tracking-widest uppercase leading-none">
@@ -104,7 +110,7 @@ export default function AdminSidebar() {
           className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#FF453A]/70 hover:text-[#FF453A] hover:bg-[#FF453A]/10 transition-all duration-200"
         >
           <LogOut className="w-4 h-4" />
-          <span>Logout</span>
+          <span>{t('admin.logout')}</span>
         </button>
       </div>
     </aside>

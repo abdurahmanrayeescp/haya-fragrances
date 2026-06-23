@@ -7,6 +7,7 @@ import { Footer } from '../../components/Footer';
 import { api } from '../../lib/api';
 import { useCartStore } from '../../store/useCartStore';
 import { useWishlistStore } from '../../store/useWishlistStore';
+import { useTranslation } from '../../store/useI18nStore';
 import { Sparkles, ShoppingCart, Heart, Star, Compass, RefreshCw, Send, HelpCircle } from 'lucide-react';
 
 interface RecommendedProduct {
@@ -35,6 +36,7 @@ export default function AIMemoryFinderPage() {
   const [loadingPhase, setLoadingPhase] = useState(0);
   const [result, setResult] = useState<MemoryFinderResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const addItem = useCartStore((state) => state.addItem);
   const { hasItem, addItem: addToWishlist, removeItem: removeFromWishlist } = useWishlistStore();
@@ -105,13 +107,13 @@ export default function AIMemoryFinderPage() {
           <div className="text-center max-w-2xl mx-auto mb-12 space-y-4">
             <div className="inline-flex items-center space-x-2 bg-[#D4AF37]/10 border border-[#D4AF37]/20 px-4 py-1.5 rounded-full text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Olfactory Memory Concierge</span>
+              <span>{t('navbar.memoryFinder')}</span>
             </div>
             <h1 className="serif-title text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight">
-              Turn Your <span className="gold-text-gradient">Memories</span> <br />Into Fragrance
+              {t('memoryFinder.title')}
             </h1>
             <p className="text-sm text-[#AEAEB2] leading-relaxed max-w-lg mx-auto">
-              Describe a memory, emotion, place, or experience. Our premium AI model will translate your words into a luxury fragrance profile and find matching scents.
+              {t('memoryFinder.subtitle')}
             </p>
           </div>
         )}
@@ -122,12 +124,12 @@ export default function AIMemoryFinderPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-[10px] tracking-widest text-[#AEAEB2] font-semibold uppercase mb-3">
-                  Your Memory or Moment
+                  {t('perfumeCreator.inputLabel')}
                 </label>
                 <textarea
                   value={memory}
                   onChange={(e) => setMemory(e.target.value)}
-                  placeholder="I remember rainy evenings, coffee, old books, and soft jazz music..."
+                  placeholder={t('memoryFinder.inputPlaceholder')}
                   maxLength={500}
                   className="w-full min-h-[140px] bg-black/40 border border-[#1F1F23] hover:border-white/10 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] rounded-xl p-4.5 text-sm text-white placeholder-[#AEAEB2]/50 transition resize-none focus:outline-none"
                 />
@@ -140,7 +142,7 @@ export default function AIMemoryFinderPage() {
               {/* Suggestions Chips */}
               <div className="space-y-2.5">
                 <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-semibold">
-                  Or select an inspiration:
+                  {t('perfumeCreator.suggestionsLabel')}
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {[
@@ -173,7 +175,7 @@ export default function AIMemoryFinderPage() {
                 disabled={!memory.trim()}
                 className="w-full shine-hover py-4 gold-bg-gradient hover:bg-gold-bg-gradient text-black text-xs font-bold tracking-widest uppercase rounded-xl flex items-center justify-center space-x-2 transition shadow-lg disabled:opacity-40 disabled:pointer-events-none"
               >
-                <span>Discover My Fragrance</span>
+                <span>{t('memoryFinder.btnDiscover')}</span>
                 <Send className="w-3.5 h-3.5" />
               </button>
             </form>
@@ -195,16 +197,16 @@ export default function AIMemoryFinderPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="serif-title text-2xl font-semibold text-white">Synthesizing Olfactory Memory</h3>
-              <p className="text-xs text-[#AEAEB2] tracking-wider uppercase">Decoding your moment in time...</p>
+              <h3 className="serif-title text-2xl font-semibold text-white">{t('perfumeCreator.loadingTitle')}</h3>
+              <p className="text-xs text-[#AEAEB2] tracking-wider uppercase">{t('perfumeCreator.loadingSubtitle')}</p>
             </div>
 
             {/* Loading Steps list */}
             <div className="max-w-xs mx-auto text-left space-y-4 border-t border-[#1F1F23] pt-6">
               {[
-                { label: 'Analyzing emotions...', phase: 0 },
-                { label: 'Extracting scent notes...', phase: 1 },
-                { label: 'Finding fragrance matches...', phase: 2 }
+                { label: t('memoryFinder.loadingEmotions'), phase: 0 },
+                { label: t('memoryFinder.loadingNotes'), phase: 1 },
+                { label: t('memoryFinder.loadingMatches'), phase: 2 }
               ].map((step, idx) => {
                 const isActive = loadingPhase === step.phase;
                 const isCompleted = loadingPhase > step.phase;
@@ -236,9 +238,9 @@ export default function AIMemoryFinderPage() {
             {/* Header Banner */}
             <div className="text-center max-w-xl mx-auto space-y-4">
               <div className="inline-flex items-center space-x-2 bg-[#D4AF37]/10 border border-[#D4AF37]/25 px-4.5 py-1.5 rounded-full text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">
-                <span>OLFACTORY PROFILE UNLOCKED</span>
+                <span>{t('memoryFinder.emotionalProfile')}</span>
               </div>
-              <h2 className="serif-title text-3xl sm:text-4xl md:text-5xl font-bold text-white">Memory Transformed</h2>
+              <h2 className="serif-title text-3xl sm:text-4xl md:text-5xl font-bold text-white">{t('memoryFinder.title')}</h2>
               <p className="text-xs text-[#AEAEB2] max-w-md mx-auto italic">
                 &ldquo;{memory}&rdquo;
               </p>
@@ -249,16 +251,16 @@ export default function AIMemoryFinderPage() {
               
               {/* Memory Interpretation */}
               <div className="space-y-2">
-                <span className="block text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">Memory Interpretation</span>
+                <span className="block text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">{t('memoryFinder.emotionalProfile')}</span>
                 <p className="text-base text-[#F5F5F7] font-medium">
-                  Your memory reflects {formatEmotionsString(result.emotions)}.
+                  {t('memoryFinder.loadingEmotions')} {formatEmotionsString(result.emotions)}.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-b border-[#D4AF37]/10 py-8">
                 {/* Emotional Profile badges */}
                 <div className="space-y-3">
-                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">Emotional Profile</span>
+                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">{t('memoryFinder.emotionalProfile')}</span>
                   <div className="flex flex-wrap gap-2.5">
                     {result.emotions.map((emotion) => (
                       <span
@@ -273,7 +275,7 @@ export default function AIMemoryFinderPage() {
 
                 {/* Suggested Scent Notes cards */}
                 <div className="space-y-3">
-                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">Suggested Scent Notes</span>
+                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">{t('memoryFinder.suggestedNotes')}</span>
                   <div className="grid grid-cols-2 gap-2">
                     {result.notes.map((note) => (
                       <div
@@ -290,7 +292,7 @@ export default function AIMemoryFinderPage() {
 
               {/* Poetic Description */}
               <div className="space-y-3">
-                <span className="block text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">AI Luxury Description</span>
+                <span className="block text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">{t('perfumeCreator.story')}</span>
                 <p className="serif-title text-lg md:text-xl text-[#F5F5F7] leading-relaxed font-normal italic">
                   &ldquo;{result.description}&rdquo;
                 </p>
@@ -300,8 +302,8 @@ export default function AIMemoryFinderPage() {
             {/* PRODUCT RECOMMENDATIONS */}
             <div className="space-y-8 pt-4">
               <div className="text-center space-y-2">
-                <h3 className="serif-title text-2xl md:text-3xl font-bold text-white">Recommended Fragrances</h3>
-                <p className="text-xs text-[#AEAEB2] tracking-wider uppercase">Curated from LuxeAura database</p>
+                <h3 className="serif-title text-2xl md:text-3xl font-bold text-white">{t('memoryFinder.recommendedPerfumes')}</h3>
+                <p className="text-xs text-[#AEAEB2] tracking-wider uppercase">{t('home.productsSubtitle')}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -352,7 +354,7 @@ export default function AIMemoryFinderPage() {
                         
                         {/* Match Percentage Badge */}
                         <div className="absolute top-4 left-4 z-10 bg-[#D4AF37] text-black text-[10px] font-extrabold tracking-widest uppercase px-2.5 py-1 rounded-full shadow-lg shadow-black/30">
-                          {prod.match_percentage}% MATCH
+                          {prod.match_percentage}% {t('memoryFinder.matchPercent').toUpperCase()}
                         </div>
 
                         {/* Wishlist Button */}
@@ -397,7 +399,7 @@ export default function AIMemoryFinderPage() {
                             className="flex items-center space-x-1.5 bg-[#D4AF37] text-black px-3.5 py-1.5 rounded-lg text-[10px] font-bold tracking-wider hover:bg-[#E5C158] transition uppercase"
                           >
                             <ShoppingCart className="w-3 h-3" />
-                            <span>ADD TO CART</span>
+                            <span>{t('products.addToCart')}</span>
                           </button>
                         </div>
                       </div>
@@ -413,7 +415,7 @@ export default function AIMemoryFinderPage() {
                   className="px-6 py-3 border border-[#D4AF37]/30 hover:border-[#D4AF37] text-[#D4AF37] font-bold rounded-lg text-xs tracking-widest uppercase flex items-center space-x-2 transition"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
-                  <span>TRANSLATE ANOTHER MEMORY</span>
+                  <span>{t('perfumeCreator.btnReset')}</span>
                 </button>
               </div>
             </div>

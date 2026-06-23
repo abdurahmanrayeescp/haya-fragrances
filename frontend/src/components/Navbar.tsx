@@ -4,12 +4,15 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useCartStore } from '../store/useCartStore';
+import { useTranslation } from '../store/useI18nStore';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { ShoppingBag, User, Sparkles, Menu, X, ShieldAlert } from 'lucide-react';
 import { CartDrawer } from './CartDrawer';
 
 export function Navbar() {
   const { isAuthenticated, user, logout } = useAuthStore();
   const { items } = useCartStore();
+  const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -29,31 +32,33 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6 text-[10px] font-medium tracking-widest text-[#AEAEB2]">
             <Link href="/products" className="hover:text-white transition">
-              COLLECTION
+              {t('navbar.collection')}
             </Link>
             <Link href="/ai-perfume-creator" className="hover:text-[#D4AF37] transition">
-              AI PERFUME CREATOR
+              {t('navbar.perfumeCreator')}
             </Link>
             <Link href="/ai-recommend" className="hover:text-white transition">
-              SCENT QUIZ
+              {t('navbar.aiFinder')}
             </Link>
             <Link href="/ai-memory-finder" className="hover:text-white transition">
-              MEMORY FINDER
+              {t('navbar.memoryFinder')}
             </Link>
             <Link href="/ai-voice-finder" className="flex items-center space-x-1 hover:text-[#D4AF37] text-white font-semibold transition">
               <Sparkles className="w-3 h-3 text-[#D4AF37]" />
-              <span>VOICE PERFUME FINDER</span>
+              <span>{t('navbar.voiceFinder')}</span>
             </Link>
             {isAuthenticated && user?.role === 'admin' && (
               <Link href="/admin" className="flex items-center space-x-1 text-[#E5C158] hover:text-[#D4AF37] transition">
                 <ShieldAlert className="w-4 h-4" />
-                <span>ADMIN</span>
+                <span>{t('navbar.admin')}</span>
               </Link>
             )}
           </nav>
 
           {/* Action icons */}
           <div className="hidden md:flex items-center space-x-6">
+            <LanguageSwitcher />
+            
             {isAuthenticated ? (
               <div className="flex items-center space-x-6">
                 <Link href="/dashboard" className="flex items-center space-x-2 text-sm hover:text-white transition text-[#AEAEB2]">
@@ -64,13 +69,13 @@ export function Navbar() {
                   onClick={logout}
                   className="text-xs tracking-widest uppercase border border-[#D4AF37]/20 px-3 py-1.5 rounded hover:bg-[#D4AF37]/10 hover:border-[#D4AF37] text-[#D4AF37] transition"
                 >
-                  LOGOUT
+                  {t('admin.logout')}
                 </button>
               </div>
             ) : (
               <Link href="/login" className="flex items-center space-x-2 text-sm text-[#AEAEB2] hover:text-white transition">
                 <User className="w-5 h-5" />
-                <span>SIGN IN</span>
+                <span>{t('navbar.login')}</span>
               </Link>
             )}
 
@@ -114,31 +119,37 @@ export function Navbar() {
         {isMobileMenuOpen && (
           <div className="md:hidden bg-black/95 backdrop-blur-lg border-b border-[#D4AF37]/10 px-6 py-8 flex flex-col space-y-5 text-center text-sm tracking-widest font-medium text-[#AEAEB2]">
             <Link href="/products" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition">
-              COLLECTION
+              {t('navbar.collection')}
             </Link>
             <Link href="/ai-perfume-creator" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#D4AF37] text-[#D4AF37] transition">
-              AI PERFUME CREATOR
+              {t('navbar.perfumeCreator')}
             </Link>
             <Link href="/ai-recommend" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition">
-              SCENT QUIZ
+              {t('navbar.aiFinder')}
             </Link>
             <Link href="/ai-memory-finder" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition">
-              MEMORY FINDER
+              {t('navbar.memoryFinder')}
             </Link>
             <Link href="/ai-voice-finder" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-center space-x-1.5 hover:text-[#D4AF37] text-[#D4AF37] transition">
               <Sparkles className="w-4 h-4 text-[#D4AF37]" />
-              <span>VOICE PERFUME FINDER</span>
+              <span>{t('navbar.voiceFinder')}</span>
             </Link>
             {isAuthenticated && user?.role === 'admin' && (
               <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="text-[#E5C158] hover:text-[#D4AF37] transition">
-                ADMIN
+                {t('navbar.admin')}
               </Link>
             )}
+            
+            <div className="pt-2 flex justify-center">
+              <LanguageSwitcher />
+            </div>
+
             <hr className="border-[#D4AF37]/10 w-1/3 mx-auto" />
+            
             {isAuthenticated ? (
               <>
                 <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition">
-                  MY DASHBOARD
+                  {t('admin.dashboard')}
                 </Link>
                 <button
                   onClick={() => {
@@ -147,7 +158,7 @@ export function Navbar() {
                   }}
                   className="w-full text-sm border border-[#D4AF37]/30 py-3 rounded text-[#D4AF37] uppercase tracking-widest"
                 >
-                  LOGOUT
+                  {t('admin.logout')}
                 </button>
               </>
             ) : (
@@ -156,7 +167,7 @@ export function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="w-full bg-[#D4AF37] text-black py-3 rounded uppercase text-sm font-semibold tracking-widest"
               >
-                SIGN IN
+                {t('navbar.login')}
               </Link>
             )}
           </div>

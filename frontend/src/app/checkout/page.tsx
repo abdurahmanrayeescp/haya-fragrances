@@ -6,6 +6,7 @@ import { useCartStore } from '../../store/useCartStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/Footer';
+import { useTranslation } from '../../store/useI18nStore';
 import { CheckCircle2, ChevronRight, CreditCard, ShoppingBag, Truck } from 'lucide-react';
 import { api } from '../../lib/api';
 import Link from 'next/link';
@@ -14,6 +15,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { items, coupon, getSubtotal, getDiscountAmount, getTax, getShipping, getTotal, clearCart } = useCartStore();
   const { isAuthenticated, user } = useAuthStore();
+  const { t } = useTranslation();
 
   // Address form inputs
   const [name, setName] = useState(user?.name || '');
@@ -69,31 +71,31 @@ export default function CheckoutPage() {
           <div className="w-full max-w-xl glass-card p-8 md:p-10 rounded-2xl text-center space-y-6">
             <CheckCircle2 className="w-16 h-16 text-[#D4AF37] mx-auto animate-pulse" />
             <div className="space-y-2">
-              <h2 className="serif-title text-3xl font-bold text-white">Order Confirmed!</h2>
+              <h2 className="serif-title text-3xl font-bold text-white">{t('checkout.success')}</h2>
               <p className="text-xs text-[#AEAEB2] tracking-wider">
-                Thank you for your purchase. Your invoice details have been emailed.
+                {t('checkout.thankYou')}
               </p>
             </div>
 
             <div className="border border-[#D4AF37]/15 bg-black/40 rounded-xl p-5 text-left text-xs space-y-3 font-medium">
               <div className="flex justify-between border-b border-[#1F1F23] pb-2 text-[10px] text-[#AEAEB2] tracking-widest">
                 <span>INVOICE DETAILS</span>
-                <span className="text-[#D4AF37] font-bold">ORDER ID: #{orderConfirmed.id}</span>
+                <span className="text-[#D4AF37] font-bold">{t('checkout.orderId').toUpperCase()}: #{orderConfirmed.id}</span>
               </div>
               <div className="flex justify-between text-[#AEAEB2]">
-                <span>Recipient:</span>
+                <span>{t('checkout.fullName')}:</span>
                 <span className="text-white">{name}</span>
               </div>
               <div className="flex justify-between text-[#AEAEB2]">
-                <span>Shipping Address:</span>
+                <span>{t('checkout.shipping')}:</span>
                 <span className="text-white text-right max-w-xs">{orderConfirmed.shipping_address}</span>
               </div>
               <div className="flex justify-between text-[#AEAEB2]">
-                <span>Payment Method:</span>
+                <span>{t('checkout.payment')}:</span>
                 <span className="text-white">{orderConfirmed.payment_method}</span>
               </div>
               <div className="flex justify-between border-t border-[#1F1F23] pt-2 text-sm font-semibold tracking-widest text-white">
-                <span>TOTAL CHARGED</span>
+                <span>{t('cart.total').toUpperCase()}</span>
                 <span className="text-[#D4AF37]">${orderConfirmed.total_price.toFixed(2)}</span>
               </div>
             </div>
@@ -103,13 +105,13 @@ export default function CheckoutPage() {
                 href="/products"
                 className="px-6 py-3 bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold text-xs tracking-widest uppercase rounded transition"
               >
-                CONTINUE SHOPPING
+                {t('navbar.collection').toUpperCase()}
               </Link>
               <Link
                 href="/dashboard"
                 className="px-6 py-3 border border-white/20 hover:border-white text-white font-bold text-xs tracking-widest uppercase rounded transition"
               >
-                MY ORDER HISTORY
+                {t('admin.orders').toUpperCase()}
               </Link>
             </div>
           </div>
@@ -125,15 +127,15 @@ export default function CheckoutPage() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-28">
         <div className="border-b border-[#1F1F23] pb-6 mb-12">
-          <span className="text-[10px] tracking-widest text-[#D4AF37] font-semibold uppercase">SECURE SECURE CHECKOUT</span>
-          <h1 className="serif-title text-3xl md:text-5xl font-bold text-white mt-1">Checkout</h1>
+          <span className="text-[10px] tracking-widest text-[#D4AF37] font-semibold uppercase">{t('cart.checkout').toUpperCase()}</span>
+          <h1 className="serif-title text-3xl md:text-5xl font-bold text-white mt-1">{t('cart.checkout')}</h1>
         </div>
 
         {items.length === 0 ? (
           <div className="h-96 flex flex-col items-center justify-center text-center space-y-4">
-            <p className="text-[#AEAEB2] tracking-wide text-sm font-medium">Your bag is empty. Add fragrances before checking out.</p>
+            <p className="text-[#AEAEB2] tracking-wide text-sm font-medium">{t('cart.empty')}</p>
             <Link href="/products" className="bg-[#D4AF37] text-black px-6 py-3.5 rounded text-xs font-bold tracking-widest uppercase">
-              SHOP COLLECTION
+              {t('navbar.collection').toUpperCase()}
             </Link>
           </div>
         ) : (
@@ -143,7 +145,7 @@ export default function CheckoutPage() {
               <div className="space-y-6">
                 <div className="flex items-center space-x-2 text-[#D4AF37] border-b border-[#1F1F23] pb-3">
                   <Truck className="w-5 h-5" />
-                  <h3 className="serif-title text-lg font-bold text-white tracking-wider">Shipping Details</h3>
+                  <h3 className="serif-title text-lg font-bold text-white tracking-wider">{t('checkout.shipping')}</h3>
                 </div>
 
                 {error && (
@@ -154,7 +156,7 @@ export default function CheckoutPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-medium tracking-wider text-[#AEAEB2]">
                   <div className="space-y-1.5">
-                    <label htmlFor="c_name">RECIPIENT FULL NAME</label>
+                    <label htmlFor="c_name">{t('checkout.fullName').toUpperCase()}</label>
                     <input
                       id="c_name"
                       type="text"
@@ -166,7 +168,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label htmlFor="c_email">EMAIL ADDRESS</label>
+                    <label htmlFor="c_email">{t('auth.emailLabel').toUpperCase()}</label>
                     <input
                       id="c_email"
                       type="email"
@@ -178,7 +180,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="sm:col-span-2 space-y-1.5">
-                    <label htmlFor="c_address">STREET ADDRESS</label>
+                    <label htmlFor="c_address">{t('checkout.address').toUpperCase()}</label>
                     <input
                       id="c_address"
                       type="text"
@@ -190,7 +192,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label htmlFor="c_city">CITY & POSTAL CODE</label>
+                    <label htmlFor="c_city">{t('checkout.city').toUpperCase()}</label>
                     <input
                       id="c_city"
                       type="text"
@@ -202,7 +204,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label htmlFor="c_phone">PHONE NUMBER</label>
+                    <label htmlFor="c_phone">{t('checkout.phone').toUpperCase()}</label>
                     <input
                       id="c_phone"
                       type="text"
@@ -220,7 +222,7 @@ export default function CheckoutPage() {
               <div className="space-y-6">
                 <div className="flex items-center space-x-2 text-[#D4AF37] border-b border-[#1F1F23] pb-3">
                   <CreditCard className="w-5 h-5" />
-                  <h3 className="serif-title text-lg font-bold text-white tracking-wider">Payment Method</h3>
+                  <h3 className="serif-title text-lg font-bold text-white tracking-wider">{t('checkout.payment')}</h3>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-semibold tracking-widest">
@@ -261,7 +263,7 @@ export default function CheckoutPage() {
                 disabled={loading}
                 className="w-full py-4 bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold rounded text-xs tracking-widest uppercase transition pt-4.5 pb-4.5 shadow-lg shadow-[#D4AF37]/15 disabled:opacity-50"
               >
-                {loading ? 'PROCESSING TRANSACTION...' : 'AUTHORIZE PAYMENT'}
+                {loading ? 'PROCESSING TRANSACTION...' : t('checkout.placeOrder').toUpperCase()}
               </button>
             </form>
 

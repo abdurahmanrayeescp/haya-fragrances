@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/Footer';
 import { api } from '../../lib/api';
+import { useTranslation } from '../../store/useI18nStore';
 import { Sparkles, Copy, Check, RefreshCw, Compass, Users, Package, Eye, ChevronRight, Wand2 } from 'lucide-react';
 
 interface PerfumeCreatorResponse {
@@ -27,6 +28,7 @@ export default function AIPerfumeCreatorPage() {
   const [loadingPhase, setLoadingPhase] = useState(0);
   const [result, setResult] = useState<PerfumeCreatorResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   // Bottle Image generation states
   const [generatingImage, setGeneratingImage] = useState(false);
@@ -120,13 +122,13 @@ export default function AIPerfumeCreatorPage() {
           <div className="text-center max-w-2xl mx-auto mb-12 space-y-4">
             <div className="inline-flex items-center space-x-2 bg-[#D4AF37]/10 border border-[#D4AF37]/20 px-4 py-1.5 rounded-full text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>AI Olfactory Formulary</span>
+              <span>{t('navbar.perfumeCreator')}</span>
             </div>
             <h1 className="serif-title text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight">
-              Create A Perfume <br />That Has <span className="gold-text-gradient">Never Existed</span>
+              {t('perfumeCreator.title')}
             </h1>
             <p className="text-sm text-[#AEAEB2] leading-relaxed max-w-lg mx-auto">
-              Synthesize a completely unique luxury perfume concept from your memories, moods, places, or dreams. AI will compose the scent pyramid, packaging story, and bottle design details.
+              {t('perfumeCreator.subtitle')}
             </p>
           </div>
         )}
@@ -137,12 +139,12 @@ export default function AIPerfumeCreatorPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-[10px] tracking-widest text-[#AEAEB2] font-semibold uppercase mb-3">
-                  Describe Your Inspiration
+                  {t('perfumeCreator.inputLabel')}
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Describe a memory, mood, place or dream..."
+                  placeholder={t('perfumeCreator.inputPlaceholder')}
                   maxLength={500}
                   className="w-full min-h-[140px] bg-black/40 border border-[#1F1F23] hover:border-white/10 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] rounded-xl p-4.5 text-sm text-white placeholder-[#AEAEB2]/50 transition resize-none focus:outline-none"
                 />
@@ -155,7 +157,7 @@ export default function AIPerfumeCreatorPage() {
               {/* Inspiration Suggestions */}
               <div className="space-y-2.5">
                 <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-semibold">
-                  Or select an inspiration:
+                  {t('perfumeCreator.suggestionsLabel')}
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {[
@@ -188,7 +190,7 @@ export default function AIPerfumeCreatorPage() {
                 disabled={!description.trim()}
                 className="w-full shine-hover py-4 gold-bg-gradient hover:bg-gold-bg-gradient text-black text-xs font-bold tracking-widest uppercase rounded-xl flex items-center justify-center space-x-2 transition shadow-lg disabled:opacity-40 disabled:pointer-events-none"
               >
-                <span>Create My Perfume</span>
+                <span>{t('perfumeCreator.btnCreate')}</span>
                 <Wand2 className="w-3.5 h-3.5" />
               </button>
             </form>
@@ -207,18 +209,18 @@ export default function AIPerfumeCreatorPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="serif-title text-2xl font-semibold text-white">Synthesizing Bespoke Concept</h3>
-              <p className="text-xs text-[#AEAEB2] tracking-wider uppercase">Running sensory mapping engines...</p>
+              <h3 className="serif-title text-2xl font-semibold text-white">{t('perfumeCreator.loadingTitle')}</h3>
+              <p className="text-xs text-[#AEAEB2] tracking-wider uppercase">{t('perfumeCreator.loadingSubtitle')}</p>
             </div>
 
             {/* Load steps list */}
             <div className="max-w-xs mx-auto text-left space-y-4 border-t border-[#1F1F23] pt-6">
               {[
-                { label: 'Understanding Inspiration...', phase: 0 },
-                { label: 'Creating Notes...', phase: 1 },
-                { label: 'Designing Bottle...', phase: 2 },
-                { label: 'Crafting Brand Story...', phase: 3 },
-                { label: 'Finalizing Luxury Concept...', phase: 4 }
+                { label: t('perfumeCreator.phase0'), phase: 0 },
+                { label: t('perfumeCreator.phase1'), phase: 1 },
+                { label: t('perfumeCreator.phase2'), phase: 2 },
+                { label: t('perfumeCreator.phase3'), phase: 3 },
+                { label: t('perfumeCreator.phase4'), phase: 4 }
               ].map((step, idx) => {
                 const isActive = loadingPhase === step.phase;
                 const isCompleted = loadingPhase > step.phase;
@@ -250,7 +252,7 @@ export default function AIPerfumeCreatorPage() {
             {/* Header Banner */}
             <div className="text-center max-w-xl mx-auto space-y-4">
               <div className="inline-flex items-center space-x-2 bg-[#D4AF37]/10 border border-[#D4AF37]/25 px-4 py-1 rounded-full text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">
-                <span>FORMULATION COMPLETE</span>
+                <span>{t('perfumeCreator.loadingTitle')}</span>
               </div>
               <h2 className="serif-title text-4xl sm:text-5xl font-bold text-white">{result.perfume_name}</h2>
               <p className="text-xs text-[#AEAEB2] tracking-widest uppercase italic font-semibold">
@@ -266,7 +268,7 @@ export default function AIPerfumeCreatorPage() {
                 
                 {/* Brand Story card */}
                 <div className="glass-card p-6 md:p-8 rounded-2xl space-y-3">
-                  <span className="block text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">Brand Story</span>
+                  <span className="block text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">{t('perfumeCreator.story')}</span>
                   <p className="text-sm text-[#F5F5F7] leading-relaxed">
                     {result.story}
                   </p>
@@ -274,11 +276,11 @@ export default function AIPerfumeCreatorPage() {
 
                 {/* Scent Pyramid card */}
                 <div className="glass-card p-6 md:p-8 rounded-2xl space-y-6">
-                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold mb-2">Olfactory Notes Pyramid</span>
+                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold mb-2">{t('perfumeCreator.notesTitle')}</span>
                   
                   {/* Top Notes */}
                   <div className="space-y-2 border-b border-[#1F1F23]/60 pb-4">
-                    <span className="block text-[10px] tracking-widest text-[#D4AF37]/80 uppercase font-bold">Top Notes (Opening)</span>
+                    <span className="block text-[10px] tracking-widest text-[#D4AF37]/80 uppercase font-bold">{t('perfumeCreator.notesTop')}</span>
                     <div className="flex flex-wrap gap-2">
                       {result.top_notes.map((note) => (
                         <span key={note} className="bg-black/35 border border-[#1F1F23] rounded-lg px-3 py-1.5 text-xs text-white capitalize">{note}</span>
@@ -288,7 +290,7 @@ export default function AIPerfumeCreatorPage() {
 
                   {/* Middle Notes */}
                   <div className="space-y-2 border-b border-[#1F1F23]/60 pb-4">
-                    <span className="block text-[10px] tracking-widest text-[#D4AF37]/80 uppercase font-bold">Heart Notes (Core Scent)</span>
+                    <span className="block text-[10px] tracking-widest text-[#D4AF37]/80 uppercase font-bold">{t('perfumeCreator.notesHeart')}</span>
                     <div className="flex flex-wrap gap-2">
                       {result.middle_notes.map((note) => (
                         <span key={note} className="bg-black/35 border border-[#1F1F23] rounded-lg px-3 py-1.5 text-xs text-white capitalize">{note}</span>
@@ -298,7 +300,7 @@ export default function AIPerfumeCreatorPage() {
 
                   {/* Base Notes */}
                   <div className="space-y-2">
-                    <span className="block text-[10px] tracking-widest text-[#D4AF37]/80 uppercase font-bold">Base Notes (Dry Down)</span>
+                    <span className="block text-[10px] tracking-widest text-[#D4AF37]/80 uppercase font-bold">{t('perfumeCreator.notesBase')}</span>
                     <div className="flex flex-wrap gap-2">
                       {result.base_notes.map((note) => (
                         <span key={note} className="bg-black/35 border border-[#1F1F23] rounded-lg px-3 py-1.5 text-xs text-white capitalize">{note}</span>
@@ -314,13 +316,13 @@ export default function AIPerfumeCreatorPage() {
                   <div className="glass-card p-6 rounded-2xl space-y-2.5">
                     <div className="flex items-center space-x-2 text-[#D4AF37]">
                       <Compass className="w-4 h-4" />
-                      <span className="text-[10px] tracking-widest uppercase font-bold">Bottle Aesthetics</span>
+                      <span className="text-[10px] tracking-widest uppercase font-bold">{t('perfumeCreator.aestheticsTitle')}</span>
                     </div>
                     <p className="text-xs text-[#AEAEB2] leading-relaxed">
-                      Color: <strong className="text-white capitalize">{result.bottle_color}</strong>
+                      {t('perfumeCreator.aestheticsColor')}: <strong className="text-white capitalize">{result.bottle_color}</strong>
                     </p>
                     <p className="text-xs text-[#AEAEB2] leading-relaxed">
-                      Style: <span className="text-white capitalize">{result.bottle_style}</span>
+                      {t('perfumeCreator.aestheticsStyle')}: <span className="text-white capitalize">{result.bottle_style}</span>
                     </p>
                   </div>
 
@@ -328,7 +330,7 @@ export default function AIPerfumeCreatorPage() {
                   <div className="glass-card p-6 rounded-2xl space-y-2.5">
                     <div className="flex items-center space-x-2 text-[#D4AF37]">
                       <Package className="w-4 h-4" />
-                      <span className="text-[10px] tracking-widest uppercase font-bold">Packaging Style</span>
+                      <span className="text-[10px] tracking-widest uppercase font-bold">{t('perfumeCreator.packagingTitle')}</span>
                     </div>
                     <p className="text-xs text-white leading-relaxed capitalize">
                       {result.packaging_style}
@@ -339,10 +341,10 @@ export default function AIPerfumeCreatorPage() {
                 {/* target audience and marketing copy */}
                 <div className="glass-card p-6 md:p-8 rounded-2xl space-y-4">
                   <div className="flex justify-between items-center border-b border-[#1F1F23]/60 pb-3">
-                    <span className="text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">Marketing Profile</span>
+                    <span className="text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">{t('perfumeCreator.marketingTitle')}</span>
                     <div className="flex items-center space-x-1.5">
                       <Users className="w-3.5 h-3.5 text-[#D4AF37]" />
-                      <span className="text-xs text-white font-semibold">Audience: {result.target_audience}</span>
+                      <span className="text-xs text-white font-semibold">{t('perfumeCreator.marketingAudience')}: {result.target_audience}</span>
                     </div>
                   </div>
                   <p className="serif-title text-base text-[#F5F5F7] italic leading-relaxed">
@@ -357,7 +359,7 @@ export default function AIPerfumeCreatorPage() {
                 
                 {/* Luxury Score radial indicator */}
                 <div className="glass-card p-6 md:p-8 rounded-2xl text-center space-y-4">
-                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">Luxury Score</span>
+                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">{t('perfumeCreator.luxuryScore')}</span>
                   
                   <div className="relative w-32 h-32 mx-auto flex items-center justify-center">
                     {/* Ring progress bar circle */}
@@ -396,7 +398,7 @@ export default function AIPerfumeCreatorPage() {
 
                 {/* AI prompt copy box */}
                 <div className="glass-card p-6 rounded-2xl space-y-4 text-left">
-                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold font-semibold mb-1">AI Bottle Design Prompt</span>
+                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold font-semibold mb-1">{t('perfumeCreator.bottlePrompt')}</span>
                   
                   <textarea
                     value={editablePrompt}
@@ -412,12 +414,12 @@ export default function AIPerfumeCreatorPage() {
                     {copied ? (
                       <>
                         <Check className="w-3.5 h-3.5" />
-                        <span>Copied!</span>
+                        <span>{t('perfumeCreator.copied')}</span>
                       </>
                     ) : (
                       <>
                         <Copy className="w-3.5 h-3.5" />
-                        <span>Copy Prompt</span>
+                        <span>{t('perfumeCreator.copyPrompt')}</span>
                       </>
                     )}
                   </button>
@@ -425,7 +427,7 @@ export default function AIPerfumeCreatorPage() {
 
                 {/* Generate Image Section */}
                 <div className="glass-card p-6 rounded-2xl space-y-4 text-center">
-                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">Visual Design Studio</span>
+                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">{t('perfumeCreator.designStudio')}</span>
                   
                   {generatedImageUrl ? (
                     <div className="space-y-4">
@@ -436,13 +438,13 @@ export default function AIPerfumeCreatorPage() {
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <span className="block text-[9px] text-[#AEAEB2] uppercase tracking-wider">AI Generated Bottle Mockup</span>
+                      <span className="block text-[9px] text-[#AEAEB2] uppercase tracking-wider">{t('perfumeCreator.visualMockup')}</span>
                     </div>
                   ) : (
                     <div className="space-y-4">
                       <div className="aspect-square w-full rounded-lg bg-black/40 border border-dashed border-[#1F1F23] flex flex-col items-center justify-center text-[#8E8E93] text-center p-4">
                         <Package className="w-8 h-8 text-[#D4AF37]/40 mb-2" />
-                        <span className="text-xs">No visual generated yet</span>
+                        <span className="text-xs">{t('perfumeCreator.noVisual')}</span>
                       </div>
                       
                       <button
@@ -453,12 +455,12 @@ export default function AIPerfumeCreatorPage() {
                         {generatingImage ? (
                           <>
                             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                            <span>Designing Bottle...</span>
+                            <span>{t('perfumeCreator.generating')}</span>
                           </>
                         ) : (
                           <>
                             <Wand2 className="w-3.5 h-3.5" />
-                            <span>Generate Bottle Image</span>
+                            <span>{t('perfumeCreator.btnGenerate')}</span>
                           </>
                         )}
                       </button>
@@ -477,7 +479,7 @@ export default function AIPerfumeCreatorPage() {
                 className="px-8 py-3.5 border border-[#D4AF37]/30 hover:border-[#D4AF37] text-[#D4AF37] font-bold rounded-lg text-xs tracking-widest uppercase flex items-center space-x-2 transition"
               >
                 <RefreshCw className="w-4 h-4" />
-                <span>Create Another Scent Concept</span>
+                <span>{t('perfumeCreator.btnReset')}</span>
               </button>
             </div>
 

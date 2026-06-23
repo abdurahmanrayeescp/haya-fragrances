@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useCartStore } from '../store/useCartStore';
+import { useTranslation } from '../store/useI18nStore';
 import { X, Trash2, Plus, Minus, CreditCard, Sparkles } from 'lucide-react';
 import { api } from '../lib/api';
 
@@ -30,6 +31,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const [couponInput, setCouponInput] = useState('');
   const [couponError, setCouponError] = useState('');
   const [couponLoading, setCouponLoading] = useState(false);
+  const { t } = useTranslation();
 
   if (!isOpen) return null;
 
@@ -64,7 +66,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         <div className="w-screen max-w-md bg-[#121214] border-l border-[#D4AF37]/10 flex flex-col shadow-2xl">
           {/* Header */}
           <div className="px-6 py-6 border-b border-[#D4AF37]/10 flex items-center justify-between">
-            <h2 className="serif-title text-xl font-bold tracking-wider text-white">SHOPPING BAG</h2>
+            <h2 className="serif-title text-xl font-bold tracking-wider text-white">{t('navbar.cart').toUpperCase()}</h2>
             <button onClick={onClose} className="text-[#AEAEB2] hover:text-white transition focus:outline-none">
               <X className="w-6 h-6" />
             </button>
@@ -74,13 +76,13 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
             {items.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
-                <p className="text-[#AEAEB2] tracking-wide">Your fragrance bag is empty</p>
+                <p className="text-[#AEAEB2] tracking-wide">{t('cart.empty')}</p>
                 <Link
                   href="/products"
                   onClick={onClose}
                   className="bg-[#D4AF37] text-black px-6 py-3 rounded text-xs tracking-widest uppercase font-semibold hover:bg-[#E5C158] transition"
                 >
-                  SHOP COLLECTION
+                  {t('navbar.collection').toUpperCase()}
                 </Link>
               </div>
             ) : (
@@ -140,7 +142,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               <form onSubmit={handleApplyCoupon} className="flex space-x-2">
                 <input
                   type="text"
-                  placeholder={coupon ? `Active: ${coupon.code}` : "Coupon Code (e.g. WELCOME10)"}
+                  placeholder={coupon ? `Active: ${coupon.code}` : t('cart.couponCode')}
                   value={couponInput}
                   disabled={!!coupon}
                   onChange={(e) => setCouponInput(e.target.value)}
@@ -152,7 +154,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     onClick={removeCoupon}
                     className="bg-[#FF453A]/20 border border-[#FF453A]/30 text-[#FF453A] px-3 py-2 rounded text-xs uppercase tracking-widest font-semibold hover:bg-[#FF453A]/35 transition"
                   >
-                    REMOVE
+                    {t('cart.remove').toUpperCase()}
                   </button>
                 ) : (
                   <button
@@ -160,7 +162,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     disabled={couponLoading}
                     className="bg-[#D4AF37] text-black px-4 py-2 rounded text-xs uppercase tracking-widest font-semibold hover:bg-[#E5C158] transition disabled:opacity-50"
                   >
-                    {couponLoading ? '...' : 'APPLY'}
+                    {couponLoading ? '...' : t('cart.applyCoupon').toUpperCase()}
                   </button>
                 )}
               </form>
@@ -175,7 +177,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               {/* Pricing breakdown */}
               <div className="space-y-2 text-xs tracking-wider text-[#AEAEB2]">
                 <div className="flex justify-between">
-                  <span>Subtotal</span>
+                  <span>{t('cart.subtotal')}</span>
                   <span className="text-white">${getSubtotal().toFixed(2)}</span>
                 </div>
                 {coupon && (
@@ -196,7 +198,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 </div>
                 <hr className="border-[#1F1F23] my-2" />
                 <div className="flex justify-between text-sm font-semibold tracking-widest text-white">
-                  <span>TOTAL</span>
+                  <span>{t('cart.total').toUpperCase()}</span>
                   <span className="text-[#D4AF37]">${getTotal().toFixed(2)}</span>
                 </div>
               </div>
@@ -208,7 +210,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 className="w-full py-3 bg-[#D4AF37] hover:bg-[#E5C158] text-black font-semibold rounded text-xs tracking-widest text-center flex items-center justify-center space-x-2 transition uppercase"
               >
                 <CreditCard className="w-4 h-4" />
-                <span>PROCEED TO CHECKOUT</span>
+                <span>{t('cart.checkout').toUpperCase()}</span>
               </Link>
             </div>
           )}

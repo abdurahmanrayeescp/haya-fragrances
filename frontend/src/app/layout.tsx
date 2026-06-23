@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { I18nInitializer } from "../components/I18nInitializer";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -51,6 +52,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap" rel="stylesheet" />
       </head>
       <body className={`${inter.variable} ${playfair.variable} bg-[#0B0B0B] text-[#F5F5F7] min-h-full flex flex-col antialiased selection:bg-[#D4AF37] selection:text-black`}>
+        <I18nInitializer />
         {children}
       </body>
     </html>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useCartStore } from '../../store/useCartStore';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/Footer';
+import { useTranslation } from '../../store/useI18nStore';
 import { Trash2, Plus, Minus, CreditCard, Sparkles, ShoppingBag } from 'lucide-react';
 import { api } from '../../lib/api';
 
@@ -26,6 +27,7 @@ export default function CartPage() {
   const [couponInput, setCouponInput] = useState('');
   const [couponError, setCouponError] = useState('');
   const [couponLoading, setCouponLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,19 +55,19 @@ export default function CartPage() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-28 space-y-8">
         <div className="border-b border-[#1F1F23] pb-6">
-          <span className="text-[10px] tracking-widest text-[#D4AF37] font-semibold uppercase">YOUR ORDER</span>
-          <h1 className="serif-title text-3xl md:text-5xl font-bold text-white mt-1">Shopping Bag</h1>
+          <span className="text-[10px] tracking-widest text-[#D4AF37] font-semibold uppercase">{t('cart.summary')}</span>
+          <h1 className="serif-title text-3xl md:text-5xl font-bold text-white mt-1">{t('navbar.cart')}</h1>
         </div>
 
         {items.length === 0 ? (
           <div className="h-96 flex flex-col items-center justify-center text-center space-y-6">
             <ShoppingBag className="w-16 h-16 text-[#AEAEB2]" />
-            <p className="text-[#AEAEB2] tracking-wide font-medium">Your shopping bag is currently empty.</p>
+            <p className="text-[#AEAEB2] tracking-wide font-medium">{t('cart.empty')}.</p>
             <Link
               href="/products"
               className="bg-[#D4AF37] text-black px-8 py-3.5 rounded text-xs tracking-widest uppercase font-bold hover:bg-[#E5C158] transition"
             >
-              SHOP FRAGRANCES
+              {t('navbar.collection').toUpperCase()}
             </Link>
           </div>
         ) : (
@@ -113,7 +115,7 @@ export default function CartPage() {
                         className="text-[#AEAEB2] hover:text-[#FF453A] flex items-center space-x-1 text-xs tracking-wider transition"
                       >
                         <Trash2 className="w-4 h-4" />
-                        <span>REMOVE</span>
+                        <span>{t('cart.remove').toUpperCase()}</span>
                       </button>
                     </div>
                   </div>
@@ -124,14 +126,14 @@ export default function CartPage() {
             {/* Right Column: Order Summary */}
             <div className="glass-card p-8 rounded-xl h-fit space-y-6">
               <h3 className="serif-title text-xl font-bold text-white tracking-wider border-b border-[#1F1F23] pb-4">
-                Order Summary
+                {t('cart.summary')}
               </h3>
 
               {/* Coupon inputs */}
               <form onSubmit={handleApplyCoupon} className="flex space-x-2">
                 <input
                   type="text"
-                  placeholder={coupon ? `Coupon: ${coupon.code}` : "Promo Code (e.g. SUMMER20)"}
+                  placeholder={coupon ? `${t('cart.couponCode')}: ${coupon.code}` : t('cart.couponCode')}
                   value={couponInput}
                   disabled={!!coupon}
                   onChange={(e) => setCouponInput(e.target.value)}
@@ -143,7 +145,7 @@ export default function CartPage() {
                     onClick={removeCoupon}
                     className="bg-[#FF453A]/10 border border-[#FF453A]/30 text-[#FF453A] px-4 py-2.5 rounded text-xs uppercase tracking-widest font-semibold hover:bg-[#FF453A]/25 transition"
                   >
-                    REMOVE
+                    {t('cart.remove').toUpperCase()}
                   </button>
                 ) : (
                   <button
@@ -151,7 +153,7 @@ export default function CartPage() {
                     disabled={couponLoading}
                     className="bg-[#D4AF37] text-black px-5 py-2.5 rounded text-xs uppercase tracking-widest font-bold hover:bg-[#E5C158] transition"
                   >
-                    APPLY
+                    {t('cart.applyCoupon').toUpperCase()}
                   </button>
                 )}
               </form>
@@ -166,7 +168,7 @@ export default function CartPage() {
               {/* pricing */}
               <div className="space-y-3.5 text-xs tracking-wider text-[#AEAEB2]">
                 <div className="flex justify-between">
-                  <span>Bag Subtotal</span>
+                  <span>{t('cart.subtotal')}</span>
                   <span className="text-white">${getSubtotal().toFixed(2)}</span>
                 </div>
                 {coupon && (
@@ -187,7 +189,7 @@ export default function CartPage() {
                 </div>
                 <hr className="border-[#1F1F23] my-4" />
                 <div className="flex justify-between text-sm font-semibold tracking-widest text-white">
-                  <span>TOTAL ESTIMATED</span>
+                  <span>{t('cart.total').toUpperCase()}</span>
                   <span className="text-[#D4AF37]">${getTotal().toFixed(2)}</span>
                 </div>
               </div>
@@ -197,7 +199,7 @@ export default function CartPage() {
                 className="w-full py-4 bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold rounded text-xs tracking-widest text-center flex items-center justify-center space-x-2 transition uppercase"
               >
                 <CreditCard className="w-4 h-4" />
-                <span>PROCEED TO CHECKOUT</span>
+                <span>{t('cart.checkout').toUpperCase()}</span>
               </Link>
             </div>
           </div>

@@ -12,9 +12,12 @@ import { api } from '../lib/api';
 import { Sparkles, Compass, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 
+import { useTranslation } from '../store/useI18nStore';
+
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   // Fallback products in case backend hasn't booted up or database is seeding
   const fallbackProducts: Product[] = [
@@ -94,22 +97,22 @@ export default function Home() {
       
       {/* Brand lists */}
       <BrandCarousel />
-
+ 
       {/* Featured Perfumes */}
       <section className="py-24 max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16">
           <div>
             <div className="flex items-center space-x-2 text-[#D4AF37] text-[10px] tracking-widest font-semibold uppercase">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>THE SELECTION</span>
+              <span>{t('home.productsSubtitle')}</span>
             </div>
-            <h2 className="serif-title text-3xl md:text-5xl font-bold mt-2">Featured Collection</h2>
+            <h2 className="serif-title text-3xl md:text-5xl font-bold mt-2">{t('home.productsTitle')}</h2>
           </div>
           <Link
             href="/products"
             className="text-xs text-[#D4AF37] font-semibold tracking-widest uppercase hover:text-white transition flex items-center space-x-1.5 mt-4 md:mt-0"
           >
-            <span>VIEW ALL FRAGRANCES</span>
+            <span>{t('navbar.collection')}</span>
             <Compass className="w-4 h-4" />
           </Link>
         </div>

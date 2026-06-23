@@ -6,12 +6,14 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/Footer';
+import { useTranslation } from '../../store/useI18nStore';
 import { Sparkles, Eye, EyeOff } from 'lucide-react';
 import { api } from '../../lib/api';
 
 export default function RegisterPage() {
   const router = useRouter();
   const login = useAuthStore((state) => state.login);
+  const { t } = useTranslation();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -55,11 +57,11 @@ export default function RegisterPage() {
           <div className="text-center space-y-2">
             <div className="inline-flex items-center space-x-1 bg-[#D4AF37]/10 border border-[#D4AF37]/25 px-3 py-1 rounded-full text-[10px] tracking-widest text-[#D4AF37] uppercase font-semibold">
               <Sparkles className="w-3 h-3" />
-              <span>LUXEAURA CLUB</span>
+              <span>{t('navbar.register')}</span>
             </div>
-            <h2 className="serif-title text-3xl font-bold tracking-wide text-white">Create Account</h2>
+            <h2 className="serif-title text-3xl font-bold tracking-wide text-white">{t('auth.registerTitle')}</h2>
             <p className="text-xs text-[#AEAEB2] tracking-wide font-medium">
-              Join to experience personalized olfactory matches and reserve releases.
+              {t('auth.registerSubtitle')}
             </p>
           </div>
 
@@ -71,7 +73,7 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4 text-xs font-medium tracking-wider text-[#AEAEB2]">
             <div className="space-y-1.5">
-              <label htmlFor="name">FULL NAME</label>
+              <label htmlFor="name">{t('auth.nameLabel').toUpperCase()}</label>
               <input
                 id="name"
                 type="text"
@@ -84,7 +86,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="email">EMAIL ADDRESS</label>
+              <label htmlFor="email">{t('auth.emailLabel').toUpperCase()}</label>
               <input
                 id="email"
                 type="email"
@@ -97,7 +99,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="password">PASSWORD</label>
+              <label htmlFor="password">{t('auth.passwordLabel').toUpperCase()}</label>
               <div className="relative">
                 <input
                   id="password"
@@ -123,14 +125,14 @@ export default function RegisterPage() {
               disabled={loading}
               className="w-full py-3 bg-[#D4AF37] hover:bg-[#E5C158] text-black font-semibold rounded text-xs tracking-widest uppercase transition pt-3.5 pb-3.5 mt-6 shadow-lg shadow-[#D4AF37]/15 disabled:opacity-50"
             >
-              {loading ? 'CREATING ACCOUNT...' : 'REGISTER'}
+              {loading ? 'CREATING ACCOUNT...' : t('auth.registerButton').toUpperCase()}
             </button>
           </form>
 
           <div className="text-center pt-2 text-xs tracking-wider text-[#AEAEB2]">
-            <span>Already have an account? </span>
+            <span>{t('auth.hasAccount')} </span>
             <Link href="/login" className="text-[#D4AF37] font-semibold hover:underline">
-              Sign In
+              {t('auth.loginLink')}
             </Link>
           </div>
         </div>

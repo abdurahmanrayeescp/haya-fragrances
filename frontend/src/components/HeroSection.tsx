@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { useTranslation } from '../store/useI18nStore';
 
 export function HeroSection() {
+  const { t } = useTranslation();
+
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black font-sans">
       {/* Background visual asset image */}
@@ -25,12 +28,11 @@ export function HeroSection() {
         </div>
 
         <h1 className="serif-title text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white leading-tight">
-          Discover Luxury <br />
-          <span className="gold-text-gradient">In Every Drop</span>
+          {t('home.heroTitle')}
         </h1>
 
         <p className="max-w-xl mx-auto text-sm sm:text-base md:text-lg text-[#AEAEB2] font-medium tracking-wide leading-relaxed">
-          Exclusive fragrances crafted for unforgettable experiences. Inspired by Dior, Tom Ford, Chanel, and Le Labo.
+          {t('home.heroSubtitle')}
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -38,14 +40,14 @@ export function HeroSection() {
             href="/products"
             className="w-full sm:w-auto px-8 py-4 bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold text-xs tracking-widest uppercase rounded flex items-center justify-center space-x-2 transition shadow-lg shadow-[#D4AF37]/15"
           >
-            <span>SHOP COLLECTION</span>
+            <span>{t('navbar.collection')}</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
             href="/ai-recommend"
             className="w-full sm:w-auto px-8 py-4 border border-white/20 hover:border-white hover:bg-white/5 text-white font-bold text-xs tracking-widest uppercase rounded transition"
           >
-            EXPLORE QUIZ
+            {t('home.heroCtaQuiz')}
           </Link>
         </div>
       </div>

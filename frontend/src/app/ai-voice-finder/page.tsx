@@ -7,6 +7,7 @@ import { Footer } from '../../components/Footer';
 import { api } from '../../lib/api';
 import { useCartStore } from '../../store/useCartStore';
 import { useWishlistStore } from '../../store/useWishlistStore';
+import { useTranslation } from '../../store/useI18nStore';
 import { Sparkles, ShoppingCart, Heart, Star, Mic, Square, RefreshCw, Volume2, ShieldAlert } from 'lucide-react';
 
 interface RecommendedProduct {
@@ -41,6 +42,7 @@ export default function AIVoiceFinderPage() {
   const [loadingPhase, setLoadingPhase] = useState(0);
   const [result, setResult] = useState<VoiceAnalysisResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const recognitionRef = useRef<any>(null);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -195,13 +197,13 @@ export default function AIVoiceFinderPage() {
           <div className="text-center max-w-2xl mx-auto mb-12 space-y-4">
             <div className="inline-flex items-center space-x-2 bg-[#D4AF37]/10 border border-[#D4AF37]/20 px-4 py-1.5 rounded-full text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">
               <Mic className="w-3.5 h-3.5" />
-              <span>Voice Signature Scent</span>
+              <span>{t('navbar.voiceFinder')}</span>
             </div>
             <h1 className="serif-title text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight">
-              Speak Your Mood.<br />Discover Your <span className="gold-text-gradient">Signature Scent</span>.
+              {t('voiceFinder.title')}
             </h1>
             <p className="text-sm text-[#AEAEB2] leading-relaxed max-w-lg mx-auto">
-              Describe how you feel, your plans, or an experience in your own voice. Let our premium AI analyze your tone, emotions, and occasion to find matching perfumes.
+              {t('voiceFinder.subtitle')}
             </p>
           </div>
         )}
@@ -233,7 +235,7 @@ export default function AIVoiceFinderPage() {
                   </div>
                 ) : (
                   <div className="h-16 flex items-center justify-center text-xs text-[#AEAEB2]/60 uppercase tracking-widest">
-                    <span>Microphone Idle</span>
+                    <span>{t('voiceFinder.listening')}</span>
                   </div>
                 )}
 
@@ -261,7 +263,7 @@ export default function AIVoiceFinderPage() {
                 {/* Recording Timer and Status */}
                 <div className="space-y-1">
                   <span className="block text-sm font-bold tracking-widest text-white uppercase">
-                    {isRecording ? 'Listening...' : 'Ready to record'}
+                    {isRecording ? t('voiceFinder.listening') : t('voiceFinder.btnStart')}
                   </span>
                   {isRecording && (
                     <span className="block text-xs font-semibold text-[#D4AF37] tracking-wider animate-pulse">
@@ -278,14 +280,14 @@ export default function AIVoiceFinderPage() {
                     onClick={handleStartRecording}
                     className="px-6 py-2.5 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 border border-[#D4AF37]/30 hover:border-[#D4AF37] text-[#D4AF37] text-xs font-bold tracking-widest uppercase rounded-lg transition"
                   >
-                    Start Recording
+                    {t('voiceFinder.btnStart')}
                   </button>
                 ) : (
                   <button
                     onClick={handleStopRecording}
                     className="px-6 py-2.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500 text-red-400 text-xs font-bold tracking-widest uppercase rounded-lg transition"
                   >
-                    Stop Recording
+                    {t('voiceFinder.btnStop')}
                   </button>
                 )}
               </div>
@@ -293,13 +295,13 @@ export default function AIVoiceFinderPage() {
               {/* Transcription Area */}
               <div className="space-y-3 pt-4 text-left">
                 <label className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">
-                  Speech Transcription / Text input
+                  {t('voiceFinder.description')}
                 </label>
                 <textarea
                   value={transcript}
                   onChange={(e) => setTranscript(e.target.value)}
                   className="w-full bg-black/40 border border-[#1F1F23] rounded-xl p-4 text-xs text-white placeholder-[#AEAEB2]/30 focus:border-[#D4AF37] transition resize-none focus:outline-none min-h-[90px]"
-                  placeholder="Speak to transcribe, or type your mood here..."
+                  placeholder={t('voiceFinder.subtitle')}
                 />
                 
                 {!isRecording && transcript.trim() && (
@@ -307,7 +309,7 @@ export default function AIVoiceFinderPage() {
                     onClick={handleSubmitAnalysis}
                     className="w-full py-3.5 mt-2 gold-bg-gradient text-black text-xs font-bold tracking-widest uppercase rounded-lg shadow-lg flex items-center justify-center space-x-1.5 transition shine-hover"
                   >
-                    <span>Analyze My Voice Scent</span>
+                    <span>{t('voiceFinder.analyzing')}</span>
                     <Sparkles className="w-3.5 h-3.5" />
                   </button>
                 )}
@@ -335,17 +337,17 @@ export default function AIVoiceFinderPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="serif-title text-2xl font-semibold text-white">Deconstructing Voice Waves</h3>
-              <p className="text-xs text-[#AEAEB2] tracking-wider uppercase">Decoding speech context and mood...</p>
+              <h3 className="serif-title text-2xl font-semibold text-white">{t('voiceFinder.analyzing')}</h3>
+              <p className="text-xs text-[#AEAEB2] tracking-wider uppercase">{t('voiceFinder.listening')}</p>
             </div>
 
             {/* Load steps list */}
             <div className="max-w-xs mx-auto text-left space-y-4 border-t border-[#1F1F23] pt-6">
               {[
-                { label: 'Analyzing voice...', phase: 0 },
-                { label: 'Understanding emotions...', phase: 1 },
-                { label: 'Building fragrance profile...', phase: 2 },
-                { label: 'Finding perfect matches...', phase: 3 }
+                { label: t('voiceFinder.analyzing'), phase: 0 },
+                { label: t('memoryFinder.loadingEmotions'), phase: 1 },
+                { label: t('memoryFinder.loadingNotes'), phase: 2 },
+                { label: t('memoryFinder.loadingMatches'), phase: 3 }
               ].map((step, idx) => {
                 const isActive = loadingPhase === step.phase;
                 const isCompleted = loadingPhase > step.phase;
@@ -377,9 +379,9 @@ export default function AIVoiceFinderPage() {
             {/* Header Banner */}
             <div className="text-center max-w-xl mx-auto space-y-4">
               <div className="inline-flex items-center space-x-2 bg-[#D4AF37]/10 border border-[#D4AF37]/25 px-4.5 py-1.5 rounded-full text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">
-                <span>Vocal Olfactory Profile Unlocked</span>
+                <span>{t('navbar.voiceFinder')}</span>
               </div>
-              <h2 className="serif-title text-3xl sm:text-4xl md:text-5xl font-bold text-white">Your Voice Scent Map</h2>
+              <h2 className="serif-title text-3xl sm:text-4xl md:text-5xl font-bold text-white">{t('voiceFinder.title')}</h2>
               <p className="text-xs text-[#AEAEB2] max-w-md mx-auto italic border-l-2 border-[#D4AF37] pl-3.5 py-0.5 text-left">
                 &ldquo;{result.transcript}&rdquo;
               </p>
@@ -393,7 +395,7 @@ export default function AIVoiceFinderPage() {
                 
                 {/* Mood Badges */}
                 <div className="space-y-2">
-                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">Detected Mood</span>
+                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">{t('voiceFinder.mood')}</span>
                   <div className="flex flex-wrap gap-1.5">
                     {result.moods.map((mood) => (
                       <span
@@ -408,19 +410,19 @@ export default function AIVoiceFinderPage() {
 
                 {/* Occasion */}
                 <div className="space-y-2">
-                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">Occasion Detection</span>
+                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">{t('voiceFinder.occasion')}</span>
                   <span className="block text-sm font-semibold text-white capitalize">{result.occasion}</span>
                 </div>
 
                 {/* Energy Level */}
                 <div className="space-y-2">
-                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">Energy Level</span>
-                  <span className="block text-sm font-semibold text-white capitalize">{result.energy} Energy</span>
+                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">{t('voiceFinder.energy')}</span>
+                  <span className="block text-sm font-semibold text-white capitalize">{result.energy}</span>
                 </div>
 
                 {/* Confidence Score progress bar */}
                 <div className="space-y-2">
-                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">Confidence Score</span>
+                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">{t('voiceFinder.confidence')}</span>
                   <div className="flex items-center space-x-2.5">
                     <div className="w-full bg-[#1F1F23] h-2 rounded-full overflow-hidden">
                       <div className="bg-[#D4AF37] h-full" style={{ width: `${result.confidence_score}%` }} />
@@ -435,15 +437,15 @@ export default function AIVoiceFinderPage() {
                 
                 {/* AI Interpretation */}
                 <div className="space-y-3">
-                  <span className="block text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">AI Interpretation</span>
+                  <span className="block text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">{t('voiceFinder.description')}</span>
                   <p className="text-sm text-[#F5F5F7] leading-relaxed">
-                    Your voice suggests {result.moods.join(', ')} emotions reflecting a {result.energy} energy level. A fragrance notes composition matching this profile is detailed below.
+                    {result.description}
                   </p>
                 </div>
 
                 {/* Scent Notes badges */}
                 <div className="space-y-3">
-                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">Suggested Notes</span>
+                  <span className="block text-[10px] tracking-widest text-[#AEAEB2] uppercase font-bold">{t('memoryFinder.suggestedNotes')}</span>
                   <div className="flex flex-wrap gap-2">
                     {result.notes.map((note) => (
                       <span
@@ -459,7 +461,7 @@ export default function AIVoiceFinderPage() {
 
               {/* Poetic Description */}
               <div className="space-y-3">
-                <span className="block text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">AI Luxury Description</span>
+                <span className="block text-[10px] tracking-widest text-[#D4AF37] uppercase font-bold">{t('perfumeCreator.story')}</span>
                 <p className="serif-title text-lg md:text-xl text-[#F5F5F7] leading-relaxed font-normal italic">
                   &ldquo;{result.description}&rdquo;
                 </p>
@@ -470,8 +472,8 @@ export default function AIVoiceFinderPage() {
             {/* PRODUCT RECOMMENDATIONS */}
             <div className="space-y-8 pt-4">
               <div className="text-center space-y-2">
-                <h3 className="serif-title text-2xl md:text-3xl font-bold text-white">Recommended Perfumes</h3>
-                <p className="text-xs text-[#AEAEB2] tracking-wider uppercase">Vocal Scent Profile Matches</p>
+                <h3 className="serif-title text-2xl md:text-3xl font-bold text-white">{t('memoryFinder.recommendedPerfumes')}</h3>
+                <p className="text-xs text-[#AEAEB2] tracking-wider uppercase">{t('home.productsSubtitle')}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -522,7 +524,7 @@ export default function AIVoiceFinderPage() {
                         
                         {/* Match Percentage Badge */}
                         <div className="absolute top-4 left-4 z-10 bg-[#D4AF37] text-black text-[10px] font-extrabold tracking-widest uppercase px-2.5 py-1 rounded-full shadow-lg shadow-black/30">
-                          {prod.match_percentage}% MATCH
+                          {prod.match_percentage}% {t('memoryFinder.matchPercent').toUpperCase()}
                         </div>
 
                         {/* Wishlist Button */}
@@ -567,7 +569,7 @@ export default function AIVoiceFinderPage() {
                               className="flex items-center space-x-1.5 bg-[#D4AF37] text-black px-3 py-1.5 rounded-lg text-[9px] font-bold tracking-wider hover:bg-[#E5C158] transition uppercase"
                             >
                               <ShoppingCart className="w-3 h-3" />
-                              <span>ADD TO CART</span>
+                              <span>{t('products.addToCart')}</span>
                             </button>
                           </div>
                           
@@ -575,7 +577,7 @@ export default function AIVoiceFinderPage() {
                             href={`/products/${prod.id}`}
                             className="w-full text-center py-2 border border-white/10 hover:border-white/20 text-[#AEAEB2] hover:text-white rounded-lg text-[9px] font-bold tracking-widest uppercase transition"
                           >
-                            View Product
+                            {t('products.details')}
                           </Link>
                         </div>
                       </div>
@@ -591,7 +593,7 @@ export default function AIVoiceFinderPage() {
                   className="px-6 py-3 border border-[#D4AF37]/30 hover:border-[#D4AF37] text-[#D4AF37] font-bold rounded-lg text-xs tracking-widest uppercase flex items-center space-x-2 transition"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
-                  <span>TRANSLATE ANOTHER VOICE MOOD</span>
+                  <span>{t('perfumeCreator.btnReset')}</span>
                 </button>
               </div>
             </div>
